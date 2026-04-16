@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Brownlee — Email Backend for Fitness Coaches</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E2C06A;
+    --black: #0A0A0A;
+    --surface: #111111;
+    --surface2: #181818;
+    --text: #E8E8E8;
+    --muted: #666;
+    --border: #222;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }`
+
+`*/* NAV */*`
+
+`nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--gold);
+  }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--black);
+  }`
+
+`*/* HERO */*`
+
+`.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 12vw, 110px);
+    line-height: 0.92;
+    letter-spacing: 1px;
+    max-width: 820px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.25s;
+  }
+  .hero-headline em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .hero-sub {
+    margin-top: 36px;
+    font-size: 17px;
+    font-weight: 300;
+    color: #999;
+    max-width: 460px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.4s;
+  }
+  .hero-actions {
+    margin-top: 48px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.55s;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    padding: 16px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: #555; }
+
+  .hero-stat-row {
+    margin-top: 80px;
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.7s;
+  }
+  .stat { }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }`
+
+`*/* PROBLEM */*`
+
+`.section {
+    padding: 100px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .section-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1;
+    max-width: 700px;
+  }
+  .section-body {
+    margin-top: 28px;
+    font-size: 17px;
+    color: #999;
+    max-width: 540px;
+    line-height: 1.8;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    margin-top: 60px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .problem-item {
+    background: var(--black);
+    padding: 40px 36px;
+    transition: background 0.2s;
+  }
+  .problem-item:hover { background: var(--surface); }
+  .problem-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  .problem-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .problem-text {
+    font-size: 14px;
+    color: #777;
+    line-height: 1.7;
+  }`
+
+`*/* OFFER */*`
+
+`.offer-section {
+    padding: 100px 40px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .offer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .offer-list {
+    list-style: none;
+    margin-top: 40px;
+  }
+  .offer-list li {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 15px;
+    color: #bbb;
+    line-height: 1.6;
+  }
+  .offer-list li:first-child { border-top: 1px solid var(--border); }
+  .offer-check {
+    color: var(--gold);
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .offer-card {
+    background: var(--black);
+    border: 1px solid var(--border);
+    padding: 48px 40px;
+    position: sticky;
+    top: 100px;
+  }
+  .offer-card-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .offer-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .offer-price span {
+    font-size: 28px;
+    color: var(--muted);
+  }
+  .offer-period {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .offer-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+  .offer-note {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 20px;
+  }`
+
+`*/* HOW IT WORKS */*`
+
+`.steps {
+    counter-reset: steps;
+    margin-top: 60px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .step:first-child { border-top: 1px solid var(--border); }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--border);
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .step-body {
+    font-size: 15px;
+    color: #777;
+    line-height: 1.7;
+    max-width: 480px;
+  }`
+
+`*/* CTA SECTION */*`
+
+`.cta-section {
+    padding: 120px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 9vw, 88px);
+    line-height: 0.95;
+    max-width: 800px;
+    margin: 0 auto 16px;
+  }
+  .cta-headline em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .cta-sub {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 48px;
+  }
+  .cta-dm {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 32px;
+    font-size: 14px;
+    color: #bbb;
+    letter-spacing: 1px;
+    margin-top: 40px;
+  }
+  .cta-dm strong { color: var(--gold); letter-spacing: 2px; }`
+
+`*/* FOOTER */*`
+
+`footer {
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 4px;
+    color: var(--gold);
+    font-size: 18px;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: var(--muted);
+  }`
+
+`*/* ANIMATIONS */*`
+
+`@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }`
+
+`*/* MOBILE */*`
+
+`@media (max-width: 700px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 100px 20px 60px; }
+    .hero-stat-row { gap: 32px; }
+    .section { padding: 70px 20px; }
+    .offer-section { padding: 70px 20px; }
+    .offer-inner { grid-template-columns: 1fr; gap: 40px; }
+    .offer-card { position: static; }
+    .cta-section { padding: 80px 20px; }
+    footer { padding: 30px 20px; flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>`
+
+`*<!-- NAV -->*`
+
+`<nav>
+  <div class="nav-logo">BROWNLEE.MAILS</div>
+  <a href="#contact" class="nav-cta">DM to Start</a>
+</nav>`
+
+`*<!-- HERO -->*`
+
+`<section class="hero">
+  <p class="hero-eyebrow">Email Backend for Fitness Coaches</p>
+  <h1 class="hero-headline">Your audience<br>is ready.<br><em>Your backend</em><br>isn't.</h1>
+  <p class="hero-sub">You've built the following. I build the system that turns it into monthly revenue — without you writing a single email.</p>
+  <div class="hero-actions">
+    <a href="#offer" class="btn-primary">See How It Works</a>
+    <a href="#contact" class="btn-ghost">DM on Instagram</a>
+  </div>
+  <div class="hero-stat-row">
+    <div class="stat">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Emails / Month</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Words You Write</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Done For You</div>
+    </div>
+  </div>
+</section>`
+
+`*<!-- PROBLEM -->*`
+
+`<div class="section">
+  <p class="section-label">The Problem</p>
+  <h2 class="section-headline">Instagram Doesn't Own Your Audience. But Right Now, Neither Do You.</h2>
+  <p class="section-body">Every person who likes your post and keeps scrolling is gone. No follow-up. No second chance. No system catching them.</p>
+  <div class="problem-grid">
+    <div class="problem-item">
+      <div class="problem-icon">📉</div>
+      <div class="problem-title">Algorithm Dependency</div>
+      <div class="problem-text">Your reach is rented. One update and the followers you spent years building stop seeing your content.</div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-icon">🕳️</div>
+      <div class="problem-title">People Fall Through the Cracks</div>
+      <div class="problem-text">Someone interested today forgets about you tomorrow. Email follows up automatically, in your voice, until they're ready.</div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-icon">⏱️</div>
+      <div class="problem-title">No Time to Write</div>
+      <div class="problem-text">You're coaching, creating content, running a business. Writing a nurture sequence doesn't make the list.</div>
+    </div>
+  </div>
+</div>`
+
+`*<!-- OFFER -->*`
+
+`<div class="offer-section" id="offer">
+  <div class="offer-inner">
+    <div>
+      <p class="section-label">What You Get</p>
+      <h2 class="section-headline">The Full Email Backend. Done.</h2>
+      <ul class="offer-list">
+        <li><span class="offer-check">→</span> Welcome sequence written in your voice — converts new subscribers into buyers automatically</li>
+        <li><span class="offer-check">→</span> 4 emails per month — story, nurture, problem, and offer emails on a consistent schedule</li>
+        <li><span class="offer-check">→</span> Full ESP setup — ConvertKit or Klaviyo, built and managed for you</li>
+        <li><span class="offer-check">→</span> Subject line testing — 3 variants per email, always improving open rates</li>
+        <li><span class="offer-check">→</span> Monthly report — open rates, CTR, revenue, what's working and what's next</li>
+        <li><span class="offer-check">→</span> Launch sequences — when you have an offer to push, I write the campaign</li>
+      </ul>
+    </div>
+    <div class="offer-card" id="contact">
+      <div class="offer-card-label">Monthly Retainer</div>
+      <div class="offer-price">$800<span>/mo</span></div>
+      <div class="offer-period">Cancel anytime after 30 days</div>
+      <hr class="offer-divider">
+      <a href="https://instagram.com/brownlee.mails" class="btn-primary" style="width:100%;text-align:center;display:block;">DM "EMAIL" on Instagram →</a>
+      <p class="offer-note">Not ready for a retainer? Ask about the one-time welcome sequence setup.</p>
+    </div>
+  </div>
+</div>`
+
+`*<!-- HOW IT WORKS -->*`
+
+`<div class="section">
+  <p class="section-label">The Process</p>
+  <h2 class="section-headline">From Zero to Running in One Week</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-title">Discovery Call — 20 Min</div>
+        <div class="step-body">We talk about your audience, your offer, and your goals. I diagnose the gap and tell you exactly what the email backend needs to look like for your niche.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-title">Avatar Research</div>
+        <div class="step-body">I mine your Instagram comments for the exact language your audience uses. Your emails will sound like you — because the words come from your people.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-title">Welcome Sequence Built</div>
+        <div class="step-body">Your first sequence goes live in your ESP. From now on, every new subscriber gets followed up automatically. You don't touch it.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-title">Monthly Emails on Autopilot</div>
+        <div class="step-body">Each month: strategy call, emails written, scheduled, sent, reported. You review and approve. I handle everything else.</div>
+      </div>
+    </div>
+  </div>
+</div>`
+
+`*<!-- CTA -->*`
+
+`<div class="cta-section">
+  <h2 class="cta-headline">Your list won't<br>build <em>itself.</em></h2>
+  <p class="cta-sub">One conversation. I'll tell you exactly what your audience is worth.</p>
+  <a href="https://instagram.com/brownlee.mails" class="btn-primary">Book a Free Discovery Call →</a>
+  <div class="cta-dm">DM the word <strong>"EMAIL"</strong> to @brownlee.mails on Instagram</div>
+</div>`
+
+`*<!-- FOOTER -->*`
+
+`<footer>
+  <div class="footer-logo">BROWNLEE.MAILS</div>
+  <div class="footer-text">Email Backend for Fitness Coaches</div>
+</footer>
+
+</body>
+</html>`
