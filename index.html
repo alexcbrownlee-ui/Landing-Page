@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alex Brownlee — Email Backend for Fitness Coaches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -28,11 +30,10 @@
     font-weight: 300;
     line-height: 1.6;
     overflow-x: hidden;
-  }`
+  }
 
-`*/* NAV */*`
-
-`nav {
+  /* NAV */
+  nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
@@ -66,11 +67,10 @@
   .nav-cta:hover {
     background: var(--gold);
     color: var(--black);
-  }`
+  }
 
-`*/* HERO */*`
-
-`.hero {
+  /* HERO */
+  .hero {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -87,6 +87,17 @@
     background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
+
+  /* FIX: animation-fill-mode: both ensures elements stay at opacity:0
+     only until their delay fires, preventing the black flash */
+  .hero-eyebrow,
+  .hero-headline,
+  .hero-sub,
+  .hero-actions,
+  .hero-stat-row {
+    animation-fill-mode: both;
+  }
+
   .hero-eyebrow {
     font-size: 11px;
     letter-spacing: 4px;
@@ -94,7 +105,7 @@
     color: var(--gold);
     margin-bottom: 28px;
     opacity: 0;
-    animation: fadeUp 0.6s ease forwards 0.1s;
+    animation: fadeUp 0.6s ease both 0s;
   }
   .hero-headline {
     font-family: 'Bebas Neue', sans-serif;
@@ -103,7 +114,7 @@
     letter-spacing: 1px;
     max-width: 820px;
     opacity: 0;
-    animation: fadeUp 0.7s ease forwards 0.25s;
+    animation: fadeUp 0.7s ease both 0.1s;
   }
   .hero-headline em {
     font-style: normal;
@@ -117,7 +128,7 @@
     max-width: 460px;
     line-height: 1.7;
     opacity: 0;
-    animation: fadeUp 0.7s ease forwards 0.4s;
+    animation: fadeUp 0.7s ease both 0.2s;
   }
   .hero-actions {
     margin-top: 48px;
@@ -125,7 +136,7 @@
     gap: 16px;
     flex-wrap: wrap;
     opacity: 0;
-    animation: fadeUp 0.7s ease forwards 0.55s;
+    animation: fadeUp 0.7s ease both 0.3s;
   }
   .btn-primary {
     background: var(--gold);
@@ -168,9 +179,8 @@
     padding-top: 40px;
     border-top: 1px solid var(--border);
     opacity: 0;
-    animation: fadeUp 0.7s ease forwards 0.7s;
+    animation: fadeUp 0.7s ease both 0.4s;
   }
-  .stat { }
   .stat-num {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 42px;
@@ -183,11 +193,10 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     margin-top: 4px;
-  }`
+  }
 
-`*/* PROBLEM */*`
-
-`.section {
+  /* PROBLEM */
+  .section {
     padding: 100px 40px;
     max-width: 1100px;
     margin: 0 auto;
@@ -241,11 +250,10 @@
     font-size: 14px;
     color: #777;
     line-height: 1.7;
-  }`
+  }
 
-`*/* OFFER */*`
-
-`.offer-section {
+  /* OFFER */
+  .offer-section {
     padding: 100px 40px;
     background: var(--surface);
     border-top: 1px solid var(--border);
@@ -320,11 +328,10 @@
     color: var(--muted);
     line-height: 1.7;
     margin-top: 20px;
-  }`
+  }
 
-`*/* HOW IT WORKS */*`
-
-`.steps {
+  /* HOW IT WORKS */
+  .steps {
     counter-reset: steps;
     margin-top: 60px;
   }
@@ -355,11 +362,10 @@
     color: #777;
     line-height: 1.7;
     max-width: 480px;
-  }`
+  }
 
-`*/* CTA SECTION */*`
-
-`.cta-section {
+  /* CTA SECTION */
+  .cta-section {
     padding: 120px 40px;
     text-align: center;
     position: relative;
@@ -402,17 +408,17 @@
     letter-spacing: 1px;
     margin-top: 40px;
   }
-  .cta-dm strong { color: var(--gold); letter-spacing: 2px; }`
+  .cta-dm strong { color: var(--gold); letter-spacing: 2px; }
 
-`*/* FOOTER */*`
-
-`footer {
+  /* FOOTER */
+  footer {
     padding: 40px;
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: gap;
+    flex-wrap: wrap;
+    gap: 12px;
   }
   .footer-logo {
     font-family: 'Bebas Neue', sans-serif;
@@ -423,18 +429,16 @@
   .footer-text {
     font-size: 12px;
     color: var(--muted);
-  }`
+  }
 
-`*/* ANIMATIONS */*`
-
-`@keyframes fadeUp {
+  /* ANIMATIONS */
+  @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
-  }`
+  }
 
-`*/* MOBILE */*`
-
-`@media (max-width: 700px) {
+  /* MOBILE */
+  @media (max-width: 700px) {
     nav { padding: 16px 20px; }
     .hero { padding: 100px 20px 60px; }
     .hero-stat-row { gap: 32px; }
@@ -447,18 +451,16 @@
   }
 </style>
 </head>
-<body>`
+<body>
 
-`*<!-- NAV -->*`
-
-`<nav>
+<!-- NAV -->
+<nav>
   <div class="nav-logo">BROWNLEE.MAILS</div>
   <a href="#contact" class="nav-cta">DM to Start</a>
-</nav>`
+</nav>
 
-`*<!-- HERO -->*`
-
-`<section class="hero">
+<!-- HERO -->
+<section class="hero">
   <p class="hero-eyebrow">Email Backend for Fitness Coaches</p>
   <h1 class="hero-headline">Your audience<br>is ready.<br><em>Your backend</em><br>isn't.</h1>
   <p class="hero-sub">You've built the following. I build the system that turns it into monthly revenue — without you writing a single email.</p>
@@ -480,11 +482,10 @@
       <div class="stat-label">Done For You</div>
     </div>
   </div>
-</section>`
+</section>
 
-`*<!-- PROBLEM -->*`
-
-`<div class="section">
+<!-- PROBLEM -->
+<div class="section">
   <p class="section-label">The Problem</p>
   <h2 class="section-headline">Instagram Doesn't Own Your Audience. But Right Now, Neither Do You.</h2>
   <p class="section-body">Every person who likes your post and keeps scrolling is gone. No follow-up. No second chance. No system catching them.</p>
@@ -505,11 +506,10 @@
       <div class="problem-text">You're coaching, creating content, running a business. Writing a nurture sequence doesn't make the list.</div>
     </div>
   </div>
-</div>`
+</div>
 
-`*<!-- OFFER -->*`
-
-`<div class="offer-section" id="offer">
+<!-- OFFER -->
+<div class="offer-section" id="offer">
   <div class="offer-inner">
     <div>
       <p class="section-label">What You Get</p>
@@ -532,11 +532,10 @@
       <p class="offer-note">Not ready for a retainer? Ask about the one-time welcome sequence setup.</p>
     </div>
   </div>
-</div>`
+</div>
 
-`*<!-- HOW IT WORKS -->*`
-
-`<div class="section">
+<!-- HOW IT WORKS -->
+<div class="section">
   <p class="section-label">The Process</p>
   <h2 class="section-headline">From Zero to Running in One Week</h2>
   <div class="steps">
@@ -569,23 +568,21 @@
       </div>
     </div>
   </div>
-</div>`
+</div>
 
-`*<!-- CTA -->*`
-
-`<div class="cta-section">
+<!-- CTA -->
+<div class="cta-section">
   <h2 class="cta-headline">Your list won't<br>build <em>itself.</em></h2>
   <p class="cta-sub">One conversation. I'll tell you exactly what your audience is worth.</p>
   <a href="https://instagram.com/brownlee.mails" class="btn-primary">Book a Free Discovery Call →</a>
   <div class="cta-dm">DM the word <strong>"EMAIL"</strong> to @brownlee.mails on Instagram</div>
-</div>`
+</div>
 
-`*<!-- FOOTER -->*`
-
-`<footer>
+<!-- FOOTER -->
+<footer>
   <div class="footer-logo">BROWNLEE.MAILS</div>
   <div class="footer-text">Email Backend for Fitness Coaches</div>
 </footer>
 
 </body>
-</html>`
+</html>
