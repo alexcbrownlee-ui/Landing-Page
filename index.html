@@ -1,572 +1,877 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alex Brownlee — Email Backend for Fitness Coaches</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E2C06A;
-    --black: #0A0A0A;
-    --surface: #111111;
-    --surface2: #181818;
-    --text: #E8E8E8;
-    --muted: #666;
-    --border: #222;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The 5-Step Client Acquisition System — Free for Fitness Coaches</title>
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  html { scroll-behavior: smooth; }
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --navy:       #0D1B2A;
+      --navy-light: #152236;
+      --navy-card:  #1A2C42;
+      --navy-border:#203550;
+      --green:      #39FF14;
+      --green-dim:  rgba(57, 255, 20, 0.10);
+      --green-glow: rgba(57, 255, 20, 0.35);
+      --white:      #FFFFFF;
+      --muted:      #8EA8C3;
+      --error:      #FF5C5C;
 
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+      --radius:     10px;
+      --max-width:  1100px;
+      --section-gap: 96px;
+    }
 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 4px;
-    color: var(--gold);
-  }
-  .nav-cta {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 10px 24px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-  }
-  .nav-cta:hover {
-    background: var(--gold);
-    color: var(--black);
-  }
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 120px 40px 80px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -200px; right: -200px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  .hero-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 28px;
-  }
-  .hero-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(56px, 12vw, 110px);
-    line-height: 0.92;
-    letter-spacing: 1px;
-    max-width: 820px;
-  }
-  .hero-headline em {
-    font-style: normal;
-    color: var(--gold);
-  }
-  .hero-sub {
-    margin-top: 36px;
-    font-size: 17px;
-    font-weight: 300;
-    color: #999;
-    max-width: 460px;
-    line-height: 1.7;
-  }
-  .hero-actions {
-    margin-top: 48px;
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 0.7s ease both 0.1s;
-  }
-  .btn-primary {
-    background: var(--gold);
-    color: var(--black);
-    padding: 16px 36px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-block;
-  }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--text);
-    padding: 16px 36px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-block;
-  }
-  .btn-ghost:hover { border-color: #555; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--navy);
+      color: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  .hero-stat-row {
-    margin-top: 80px;
-    display: flex;
-    gap: 48px;
-    flex-wrap: wrap;
-    padding-top: 40px;
-    border-top: 1px solid var(--border);
-    opacity: 0;
-    animation: fadeUp 0.7s ease both 0.2s;
-  }
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    color: var(--gold);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
+    img { display: block; max-width: 100%; }
 
-  /* PROBLEM */
-  .section {
-    padding: 100px 40px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-  }
-  .section-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(38px, 6vw, 64px);
-    line-height: 1;
-    max-width: 700px;
-  }
-  .section-body {
-    margin-top: 28px;
-    font-size: 17px;
-    color: #999;
-    max-width: 540px;
-    line-height: 1.8;
-  }
+    a {
+      color: var(--green);
+      text-decoration: none;
+    }
 
-  .problem-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1px;
-    margin-top: 60px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-  .problem-item {
-    background: var(--black);
-    padding: 40px 36px;
-    transition: background 0.2s;
-  }
-  .problem-item:hover { background: var(--surface); }
-  .problem-icon {
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
-  .problem-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-  }
-  .problem-text {
-    font-size: 14px;
-    color: #777;
-    line-height: 1.7;
-  }
+    /* ============================================================
+       TYPOGRAPHY HELPERS
+    ============================================================ */
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid var(--green);
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
 
-  /* OFFER */
-  .offer-section {
-    padding: 100px 40px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .offer-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .offer-list {
-    list-style: none;
-    margin-top: 40px;
-  }
-  .offer-list li {
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    font-size: 15px;
-    color: #bbb;
-    line-height: 1.6;
-  }
-  .offer-list li:first-child { border-top: 1px solid var(--border); }
-  .offer-check {
-    color: var(--gold);
-    font-size: 18px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .offer-card {
-    background: var(--black);
-    border: 1px solid var(--border);
-    padding: 48px 40px;
-    position: sticky;
-    top: 100px;
-  }
-  .offer-card-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
-  }
-  .offer-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px;
-    line-height: 1;
-    letter-spacing: 1px;
-  }
-  .offer-price span {
-    font-size: 28px;
-    color: var(--muted);
-  }
-  .offer-period {
-    font-size: 14px;
-    color: var(--muted);
-    margin-top: 4px;
-    letter-spacing: 1px;
-  }
-  .offer-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 32px 0;
-  }
-  .offer-note {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-top: 20px;
-  }
+    /* ============================================================
+       LAYOUT HELPERS
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-  /* HOW IT WORKS */
-  .steps {
-    counter-reset: steps;
-    margin-top: 60px;
-  }
-  .step {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 32px;
-    padding: 40px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: start;
-  }
-  .step:first-child { border-top: 1px solid var(--border); }
-  .step-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    color: var(--border);
-    line-height: 1;
-    padding-top: 4px;
-  }
-  .step-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-  }
-  .step-body {
-    font-size: 15px;
-    color: #777;
-    line-height: 1.7;
-    max-width: 480px;
-  }
+    section {
+      padding: var(--section-gap) 0;
+    }
 
-  /* CTA SECTION */
-  .cta-section {
-    padding: 120px 40px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    bottom: -100px; left: 50%;
-    transform: translateX(-50%);
-    width: 700px; height: 400px;
-    background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .cta-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 9vw, 88px);
-    line-height: 0.95;
-    max-width: 800px;
-    margin: 0 auto 16px;
-  }
-  .cta-headline em {
-    font-style: normal;
-    color: var(--gold);
-  }
-  .cta-sub {
-    font-size: 16px;
-    color: var(--muted);
-    margin-bottom: 48px;
-  }
-  .cta-dm {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 20px 32px;
-    font-size: 14px;
-    color: #bbb;
-    letter-spacing: 1px;
-    margin-top: 40px;
-  }
-  .cta-dm strong { color: var(--gold); letter-spacing: 2px; }
+    /* ============================================================
+       ANIMATIONS
+    ============================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-  /* FOOTER */
-  footer {
-    padding: 40px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 4px;
-    color: var(--gold);
-    font-size: 18px;
-  }
-  .footer-text {
-    font-size: 12px;
-    color: var(--muted);
-  }
+    .fade-up {
+      animation: fadeUp 0.7s ease both;
+    }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    .delay-1 { animation-delay: 0.10s; }
+    .delay-2 { animation-delay: 0.22s; }
+    .delay-3 { animation-delay: 0.34s; }
 
-  /* MOBILE */
-  @media (max-width: 700px) {
-    nav { padding: 16px 20px; }
-    .hero { padding: 100px 20px 60px; }
-    .hero-stat-row { gap: 32px; }
-    .section { padding: 70px 20px; }
-    .offer-section { padding: 70px 20px; }
-    .offer-inner { grid-template-columns: 1fr; gap: 40px; }
-    .offer-card { position: static; }
-    .cta-section { padding: 80px 20px; }
-    footer { padding: 30px 20px; flex-direction: column; gap: 12px; text-align: center; }
-  }
-</style>
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn-primary {
+      display: inline-block;
+      background: var(--green);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px 36px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px var(--green-glow);
+    }
+
+    .btn-primary:active {
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       OPT-IN FORM
+    ============================================================ */
+    .opt-in-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .opt-in-form input {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      padding: 14px 18px;
+      background: var(--navy-card);
+      border: 1.5px solid var(--navy-border);
+      border-radius: var(--radius);
+      color: var(--white);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .opt-in-form input::placeholder {
+      color: var(--muted);
+    }
+
+    .opt-in-form input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-dim);
+    }
+
+    .opt-in-form input.input-error {
+      border-color: var(--error);
+    }
+
+    .opt-in-form .field-error {
+      font-size: 0.8rem;
+      color: var(--error);
+      margin-top: -6px;
+    }
+
+    .opt-in-form button {
+      width: 100%;
+      padding: 16px;
+    }
+
+    .trust-line {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    /* Success state replaces form content */
+    .success-msg {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid var(--green);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      text-align: center;
+    }
+
+    /* ============================================================
+       SECTION HEADINGS
+    ============================================================ */
+    .section-heading {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-subheading {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 560px;
+    }
+
+    /* ============================================================
+       1. HERO SECTION
+    ============================================================ */
+    #hero {
+      padding-top: 80px;
+      padding-bottom: var(--section-gap);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(57,255,20,0.08) 0%, transparent 70%),
+        var(--navy);
+    }
+
+    #hero .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    #hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    #hero h1 span {
+      color: var(--green);
+    }
+
+    #hero .subheadline {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+
+    /* ============================================================
+       2. SOCIAL PROOF BAR
+    ============================================================ */
+    #social-proof {
+      background: var(--navy-light);
+      padding: 56px 0;
+      border-top: 1px solid var(--navy-border);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .proof-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .testimonial-card .quote {
+      font-size: 0.975rem;
+      line-height: 1.65;
+      color: var(--white);
+      font-style: italic;
+    }
+
+    .testimonial-card .quote strong {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--green-dim);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .author-info .name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .author-info .title {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ============================================================
+       3. BENEFITS SECTION
+    ============================================================ */
+    #benefits {
+      background: var(--navy);
+    }
+
+    #benefits .intro {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    #benefits .intro .section-subheading {
+      margin: 0 auto;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .benefit-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .benefit-card:hover {
+      border-color: var(--green);
+      transform: translateY(-4px);
+    }
+
+    .benefit-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .benefit-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .benefit-card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ============================================================
+       4. LEAD MAGNET CALLOUT
+    ============================================================ */
+    #lead-magnet {
+      background: var(--navy-light);
+      border-top: 1px solid var(--navy-border);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .lead-magnet-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .lead-magnet-copy h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .lead-magnet-copy h2 span {
+      color: var(--green);
+    }
+
+    .lead-magnet-copy p {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      max-width: 480px;
+    }
+
+    .lead-magnet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-magnet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--white);
+    }
+
+    .lead-magnet-list li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* PDF mockup cover */
+    .pdf-cover {
+      width: 240px;
+      min-width: 200px;
+      aspect-ratio: 3 / 4;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #1c3d5a 0%, #0a1e30 100%);
+      border: 2px solid var(--green);
+      box-shadow:
+        6px 6px 0 rgba(57,255,20,0.2),
+        0 20px 48px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      text-align: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pdf-cover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--green);
+    }
+
+    .pdf-cover .cover-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+
+    .pdf-cover .cover-icon {
+      font-size: 2.6rem;
+      margin-bottom: 14px;
+    }
+
+    .pdf-cover .cover-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      line-height: 1.3;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .pdf-cover .cover-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ============================================================
+       5. SECOND CTA SECTION
+    ============================================================ */
+    #second-cta {
+      background: var(--navy);
+      text-align: center;
+    }
+
+    #second-cta h2 {
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    #second-cta h2 span {
+      color: var(--green);
+    }
+
+    #second-cta .section-subheading {
+      margin: 0 auto 36px;
+    }
+
+    #second-cta .opt-in-form {
+      margin: 0 auto;
+    }
+
+    #second-cta .trust-line {
+      text-align: center;
+    }
+
+    /* ============================================================
+       6. FOOTER
+    ============================================================ */
+    footer {
+      background: var(--navy-light);
+      border-top: 1px solid var(--navy-border);
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 6px;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: var(--muted);
+    }
+
+    /* ============================================================
+       RESPONSIVE — TABLET & DESKTOP (>= 768px)
+    ============================================================ */
+    @media (min-width: 768px) {
+      .testimonials-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .lead-magnet-inner {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 64px;
+      }
+
+      .lead-magnet-copy {
+        flex: 1;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">BROWNLEE.MAILS</div>
-  <a href="#contact" class="nav-cta">DM to Start</a>
-</nav>
+  <!-- ============================================================
+       1. HERO SECTION
+  ============================================================ -->
+  <section id="hero">
+    <div class="container">
 
-<!-- HERO -->
-<section class="hero">
-  <p class="hero-eyebrow">Email Backend for Fitness Coaches</p>
-  <h1 class="hero-headline">Your audience<br>is ready.<br><em>Your backend</em><br>isn't.</h1>
-  <p class="hero-sub">You've built the following. I build the system that turns it into monthly revenue — without you writing a single email.</p>
-  <div class="hero-actions">
-    <a href="#offer" class="btn-primary">See How It Works</a>
-    <a href="#contact" class="btn-ghost">DM on Instagram</a>
-  </div>
-  <div class="hero-stat-row">
-    <div class="stat">
-      <div class="stat-num">5–7</div>
-      <div class="stat-label">Emails Written</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">7</div>
-      <div class="stat-label">Days to Live</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">$250</div>
-      <div class="stat-label">One Time</div>
-    </div>
-  </div>
-</section>
+      <span class="eyebrow fade-up">For Fitness Coaches</span>
 
-<!-- PROBLEM -->
-<div class="section">
-  <p class="section-label">The Problem</p>
-  <h2 class="section-headline">Instagram Doesn't Own Your Audience. But Right Now, Neither Do You.</h2>
-  <p class="section-body">Every person who likes your post and keeps scrolling is gone. No follow-up. No second chance. No system catching them.</p>
-  <div class="problem-grid">
-    <div class="problem-item">
-      <div class="problem-icon">📉</div>
-      <div class="problem-title">Algorithm Dependency</div>
-      <div class="problem-text">Your reach is rented. One update and the followers you spent years building stop seeing your content.</div>
-    </div>
-    <div class="problem-item">
-      <div class="problem-icon">🕳️</div>
-      <div class="problem-title">People Fall Through the Cracks</div>
-      <div class="problem-text">Someone interested today forgets about you tomorrow. Email follows up automatically, in your voice, until they're ready.</div>
-    </div>
-    <div class="problem-item">
-      <div class="problem-icon">⏱️</div>
-      <div class="problem-title">No Time to Write</div>
-      <div class="problem-text">You're coaching, creating content, running a business. Writing a nurture sequence doesn't make the list.</div>
-    </div>
-  </div>
-</div>
+      <h1 class="fade-up delay-1">
+        Get <span>10 New Coaching Clients</span><br>
+        Every Month — On Autopilot
+      </h1>
 
-<!-- OFFER -->
-<div class="offer-section" id="offer">
-  <div class="offer-inner">
-    <div>
-      <p class="section-label">What You Get</p>
-      <h2 class="section-headline">Your Welcome Sequence. Written. Live. Done.</h2>
-      <ul class="offer-list">
-        <li><span class="offer-check">→</span> 5–7 emails written in your voice — so every new subscriber gets followed up automatically from day one</li>
-        <li><span class="offer-check">→</span> Avatar research — I mine your Instagram comments for the exact language your audience uses</li>
-        <li><span class="offer-check">→</span> Full ESP setup — ConvertKit or Klaviyo configured and connected to your opt-in</li>
-        <li><span class="offer-check">→</span> Subject line variants — 3 tested options per email so open rates start strong</li>
-        <li><span class="offer-check">→</span> Delivered in 7 days — live before the end of the week, no back and forth</li>
-        <li><span class="offer-check">→</span> Yours forever — one payment, no subscriptions, no strings</li>
-      </ul>
-    </div>
-    <div class="offer-card" id="contact">
-      <div class="offer-card-label">One-Time Setup</div>
-      <div class="offer-price">$250<span> flat</span></div>
-      <div class="offer-period">No retainer. No commitment. Just results.</div>
-      <hr class="offer-divider">
-      <a href="https://instagram.com/brownlee.mails" class="btn-primary" style="width:100%;text-align:center;display:block;">DM "EMAIL" on Instagram →</a>
-      <p class="offer-note">Takes 20 minutes on your end. I handle everything else.</p>
-    </div>
-  </div>
-</div>
+      <p class="subheadline fade-up delay-2">
+        We give you a done-for-you lead generation system that attracts, nurtures,
+        and converts prospects into paying clients — while you focus on what you do best.
+      </p>
 
-<!-- HOW IT WORKS -->
-<div class="section">
-  <p class="section-label">The Process</p>
-  <h2 class="section-headline">From Zero to Running in One Week</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div>
-        <div class="step-title">Quick Onboarding — 20 Min</div>
-        <div class="step-body">You tell me about your audience, your offer, and your voice. That's all I need. No lengthy briefs, no back and forth.</div>
+      <!-- Hero opt-in form -->
+      <div class="fade-up delay-3" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;">
+        <form class="opt-in-form" id="hero-form" novalidate>
+          <input type="text" name="name" placeholder="Your First Name" autocomplete="given-name" />
+          <input type="email" name="email" placeholder="Your Best Email" autocomplete="email" />
+          <button type="submit" class="btn-primary">Get Free Access &#8594;</button>
+        </form>
+        <p class="trust-line">Join 2,400+ coaches. No spam. Unsubscribe anytime.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. SOCIAL PROOF BAR
+  ============================================================ -->
+  <section id="social-proof">
+    <div class="container">
+
+      <p class="proof-label">Real results from real coaches</p>
+
+      <div class="testimonials-grid">
+
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card">
+          <p class="quote">
+            "I was stuck at 3 clients for six months. After following the system,
+            I hit <strong>27 clients in 90 days</strong>. I finally have a waitlist."
+          </p>
+          <div class="testimonial-author">
+            <div class="avatar">MR</div>
+            <div class="author-info">
+              <p class="name">Marcus R.</p>
+              <p class="title">Online Strength Coach</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card">
+          <p class="quote">
+            "I stopped chasing DMs and started letting the system do the work.
+            My email list now brings in <strong>$8K/month passively</strong>."
+          </p>
+          <div class="testimonial-author">
+            <div class="avatar">JL</div>
+            <div class="author-info">
+              <p class="name">Jamie L.</p>
+              <p class="title">Women's Weight Loss Coach</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card">
+          <p class="quote">
+            "I implemented the automated follow-up in week two and was
+            <strong>booked out 4 months ahead</strong> by the end of the month."
+          </p>
+          <div class="testimonial-author">
+            <div class="avatar">DT</div>
+            <div class="author-info">
+              <p class="name">Devon T.</p>
+              <p class="title">Strength &amp; Nutrition Coach</p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div>
-        <div class="step-title">Avatar Research</div>
-        <div class="step-body">I mine your Instagram comments for the exact language your audience uses. Your emails will sound like you — because the words come from your people.</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div>
-        <div class="step-title">Sequence Written & Sent to You</div>
-        <div class="step-body">5–7 emails drafted, subject lines written, ready for your approval. You review once. I handle any edits same day.</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <div>
-        <div class="step-title">Live in Your ESP Within 7 Days</div>
-        <div class="step-body">Loaded into ConvertKit or Klaviyo, connected to your opt-in, fully automated. Every new subscriber gets followed up from the moment they join.</div>
-      </div>
-    </div>
-  </div>
-</div>
+  </section>
 
-<!-- CTA -->
-<div class="cta-section">
-  <h2 class="cta-headline">Your list won't<br>build <em>itself.</em></h2>
-  <p class="cta-sub">$250. 7 days. Zero words written by you.</p>
-  <a href="https://instagram.com/brownlee.mails" class="btn-primary">DM "EMAIL" to Get Started →</a>
-  <div class="cta-dm">DM the word <strong>"EMAIL"</strong> to @brownlee.mails on Instagram</div>
-</div>
+  <!-- ============================================================
+       3. BENEFITS SECTION
+  ============================================================ -->
+  <section id="benefits">
+    <div class="container">
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">BROWNLEE.MAILS</div>
-  <div class="footer-text">Email Backend for Fitness Coaches</div>
-</footer>
+      <div class="intro">
+        <span class="eyebrow">What You'll Get</span>
+        <h2 class="section-heading">Everything you need to<br>grow a fully booked practice</h2>
+        <p class="section-subheading">
+          Stop relying on referrals and algorithm luck. Build a system that works
+          around the clock — even when you're with clients or offline.
+        </p>
+      </div>
+
+      <div class="benefits-grid">
+
+        <!-- Benefit 1 -->
+        <div class="benefit-card">
+          <span class="benefit-icon">&#127919;</span>
+          <h3>Attract Dream Clients</h3>
+          <p>
+            A magnetic lead funnel that pre-qualifies prospects based on their goals and budget
+            before they ever send you a message. No more tire-kickers.
+          </p>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div class="benefit-card">
+          <span class="benefit-icon">&#9889;</span>
+          <h3>Automated Follow-Up</h3>
+          <p>
+            A 7-email nurture sequence that educates, builds trust, and converts cold leads
+            into paid clients 24 hours a day — zero extra effort from you.
+          </p>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div class="benefit-card">
+          <span class="benefit-icon">&#128274;</span>
+          <h3>Retain Clients Longer</h3>
+          <p>
+            Proven retention frameworks that reduce churn, increase average client lifetime,
+            and turn happy clients into your most powerful referral engine.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. LEAD MAGNET CALLOUT
+  ============================================================ -->
+  <section id="lead-magnet">
+    <div class="container">
+      <div class="lead-magnet-inner">
+
+        <!-- Copy -->
+        <div class="lead-magnet-copy">
+          <span class="eyebrow">Free Download</span>
+          <h2>The <span>5-Step Client<br>Acquisition System</span></h2>
+          <p>
+            This free PDF breaks down the exact framework used by top fitness coaches to
+            consistently attract and close high-ticket clients — without cold outreach or paid ads.
+          </p>
+          <ul class="lead-magnet-list">
+            <li>How to identify your highest-value niche and own it completely</li>
+            <li>The lead magnet formula that converts cold traffic into warm prospects</li>
+            <li>A plug-and-play email sequence you can launch in under 48 hours</li>
+            <li>The discovery call script that closes at 70%+ — every time</li>
+            <li>How to build a referral flywheel from your first 5 clients</li>
+          </ul>
+        </div>
+
+        <!-- PDF mockup cover (styled div, no image) -->
+        <div class="pdf-cover" role="img" aria-label="Free PDF guide: The 5-Step Client Acquisition System">
+          <p class="cover-label">Free Guide</p>
+          <span class="cover-icon">&#128203;</span>
+          <p class="cover-title">The 5-Step Client Acquisition System</p>
+          <p class="cover-sub">For Fitness Coaches Ready to Scale</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. SECOND CTA SECTION
+  ============================================================ -->
+  <section id="second-cta">
+    <div class="container">
+
+      <span class="eyebrow">Limited Time &#8212; Free Access</span>
+      <h2>Ready to Fill<br><span>Your Roster?</span></h2>
+      <p class="section-subheading">
+        Drop your details below and get instant access to the guide that's helping coaches
+        add 5&#8211;15 new clients every single month.
+      </p>
+
+      <!-- Second opt-in form -->
+      <form class="opt-in-form" id="footer-form" novalidate>
+        <input type="text" name="name" placeholder="Your First Name" autocomplete="given-name" />
+        <input type="email" name="email" placeholder="Your Best Email" autocomplete="email" />
+        <button type="submit" class="btn-primary">Get Free Access &#8594;</button>
+      </form>
+      <p class="trust-line">Join 2,400+ coaches. No spam. Unsubscribe anytime.</p>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="container">
+      <p class="footer-logo">FITCOACH SYSTEM</p>
+      <p>&#169; 2026 FitCoach System. All rights reserved.</p>
+      <p>
+        We take your privacy seriously. Your information will never be sold or shared
+        with third parties. You can unsubscribe at any time by clicking the link
+        in any of our emails.
+      </p>
+      <p>
+        <a href="#hero">Privacy Policy</a>
+        &nbsp;&#183;&nbsp;
+        <a href="#hero">Unsubscribe</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT: Form Validation & Submission
+  ============================================================ -->
+  <script>
+    (function () {
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function getField(form, name) {
+        return form.querySelector('[name="' + name + '"]');
+      }
+
+      /* Remove all existing inline error messages from a form */
+      function clearErrors(form) {
+        form.querySelectorAll('.field-error').forEach(function (el) { el.remove(); });
+        form.querySelectorAll('.input-error').forEach(function (el) {
+          el.classList.remove('input-error');
+        });
+      }
+
+      /* Append an error message directly below the offending field */
+      function showError(field, message) {
+        field.classList.add('input-error');
+        var err = document.createElement('p');
+        err.className = 'field-error';
+        err.textContent = message;
+        field.insertAdjacentElement('afterend', err);
+      }
+
+      /* Wire up validation + inline success message on a single form */
+      function attachForm(form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          clearErrors(form);
+
+          var nameField  = getField(form, 'name');
+          var emailField = getField(form, 'email');
+          var name  = nameField.value.trim();
+          var email = emailField.value.trim();
+          var valid = true;
+
+          if (!name) {
+            showError(nameField, 'Please enter your first name.');
+            valid = false;
+          }
+
+          if (!email) {
+            showError(emailField, 'Please enter your email address.');
+            valid = false;
+          } else if (!EMAIL_RE.test(email)) {
+            showError(emailField, 'Please enter a valid email address.');
+            valid = false;
+          }
+
+          if (valid) {
+            /* Replace the entire form with an inline success message */
+            form.innerHTML = '<p class="success-msg">\uD83C\uDF89 You\'re in! Check your inbox.</p>';
+          }
+        });
+      }
+
+      document.querySelectorAll('.opt-in-form').forEach(attachForm);
+    })();
+  </script>
 
 </body>
 </html>
